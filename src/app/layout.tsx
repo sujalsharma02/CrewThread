@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+// @ts-ignore - Next.js natively handles CSS side-effect imports, ignoring TS warning
 import "./globals.css";
 
 export const metadata: Metadata = {
