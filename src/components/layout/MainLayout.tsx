@@ -52,10 +52,9 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           style={{ width: 68 }}
         >
           {/* Logo */}
-          <Link href="/" className="flex items-center justify-center w-12 h-12 rounded-full hover:bg-white/10 transition-colors mb-2 mx-auto">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg,#6366f1,#a855f7)" }}>
-              <Zap className="w-5 h-5 text-white" />
-            </div>
+          <Link href="/" className="flex flex-col items-center justify-center w-[56px] h-[56px] rounded-full hover:bg-white/10 transition-colors mb-2 mx-auto font-black leading-none select-none tracking-tight">
+            <div className="text-[15px]" style={{ color: "#fff" }}>Crew</div>
+            <div className="text-[13px]" style={{ background: "linear-gradient(135deg, #6366f1, #a855f7)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Thread</div>
           </Link>
 
           {/* Nav */}
