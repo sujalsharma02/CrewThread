@@ -10,7 +10,7 @@
   },
   "keywords": [],
   "author": "Sujal Sharma",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "@tailwindcss/postcss": "^4.2.2",

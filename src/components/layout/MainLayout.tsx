@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Home,
   Search,
@@ -13,25 +13,40 @@ import {
   Zap,
   Feather,
   Sparkles,
+  LogOut,
 } from "lucide-react";
 import { useState } from "react";
 import CreatePostModal from "@/components/feed/CreatePostModal";
-
-const navItems = [
-  { href: "/",                           icon: Home,     label: "Home"         },
-  { href: "/explore",                    icon: Search,   label: "Explore"      },
-  { href: "/notifications",              icon: Bell,     label: "Notifications", badge: 3 },
-  { href: "/messages",                   icon: Mail,     label: "Messages"     },
-  { href: "/grok",                       icon: Sparkles, label: "Grok"         },
-  { href: "/jobs",                       icon: Briefcase,label: "Jobs"         },
-  { href: "/projects",                   icon: Code2,    label: "Projects"     },
-  { href: "/profile/sujalsharma",        icon: User,     label: "Profile"      },
-  { href: "/settings",                   icon: Settings, label: "More"         },
-];
+import { useAuth } from "@/components/auth/AuthProvider";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [showPost, setShowPost] = useState(false);
+  const { user, logout } = useAuth();
+
+  const profileHref = user ? `/profile/${user.username}` : "/login";
+  const myAvatar =
+    user?.avatar ||
+    `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.username || "guest"}`;
+
+  const navItems = [
+    { href: "/",            icon: Home,     label: "Home"         },
+    { href: "/explore",     icon: Search,   label: "Explore"      },
+    { href: "/notifications", icon: Bell,   label: "Notifications", badge: 3 },
+    { href: "/messages",    icon: Mail,     label: "Messages"     },
+    { href: "/grok",        icon: Sparkles, label: "Grok"         },
+    { href: "/jobs",        icon: Briefcase,label: "Jobs"         },
+    { href: "/projects",    icon: Code2,    label: "Projects"     },
+    { href: profileHref,    icon: User,     label: "Profile"      },
+    { href: "/settings",    icon: Settings, label: "More"         },
+  ];
+
+  const handleLogout = async () => {
+    await logout();
+    router.push("/login");
+    router.refresh();
+  };
 
   return (
     <div
@@ -96,10 +111,33 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             <Feather className="w-5 h-5" />
           </button>
 
-          {/* Avatar */}
-          <Link href="/profile/sujalsharma" className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-2 hover:bg-white/10 transition-colors">
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=sujal" alt="You" className="w-9 h-9 rounded-full" style={{ backgroundColor: "#1e2227" }} />
-          </Link>
+          {/* Avatar / Auth */}
+          {user ? (
+            <>
+              <Link href={profileHref} title={`@${user.username}`} className="flex items-center justify-center w-12 h-12 rounded-full mx-auto hover:bg-white/10 transition-colors">
+                <img src={myAvatar} alt={user.name} className="w-9 h-9 rounded-full" style={{ backgroundColor: "#1e2227" }} />
+              </Link>
+              <button
+                onClick={handleLogout}
+                title="Log out"
+                className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-2 transition-colors"
+                style={{ color: "#71767b" }}
+                onMouseEnter={e => ((e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,255,255,0.1)")}
+                onMouseLeave={e => ((e.currentTarget as HTMLElement).style.backgroundColor = "transparent")}
+              >
+                <LogOut className="w-5 h-5" />
+              </button>
+            </>
+          ) : (
+            <Link
+              href="/login"
+              title="Log in"
+              className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-2 text-white transition-opacity hover:opacity-90"
+              style={{ background: "linear-gradient(135deg,#6366f1,#a855f7)" }}
+            >
+              <User className="w-5 h-5" />
+            </Link>
+          )}
         </div>
       </div>
 
